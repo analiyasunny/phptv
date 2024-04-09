@@ -1,7 +1,30 @@
 <?php 
+include('shared/auth.php');
 $title='Saving a new show';
 include('shared/header.php'); 
 
+// process photo if any
+if (!empty($_FILES['photo'])) {
+    $photoName = $_FILES['photo']['name'];
+    echo $photoName . '<br />';
+
+    // in php, file size is bytes (1 kb = 1024 bytes)
+    $size = $_FILES['photo']['size']; 
+    echo $size . '<br />';
+
+    // temp location in server cache
+    $tmp_name = $_FILES['photo']['tmp_name'];
+    echo $tmp_name . '<br />';
+
+    // file type
+    // $type = $_FILES['photo']['type']; // never use this - unsafe, only checks extension
+    $type = mime_content_type($tmp_name);
+    echo $type . '<br />';
+
+    // save file to img/uploads
+    move_uploaded_file($tmp_name, 'img/uploads/' . $photoName);
+}
+/*
 //capture form inputs into vars
 $name=$_POST['name'];
 echo $name;
@@ -66,7 +89,8 @@ $cmd->execute();
 $db = null;
 //show msg to user 
 echo 'Show saved';
-}
+}*/
 ?>
+</main>
 </body>
 </html>

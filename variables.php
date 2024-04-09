@@ -20,5 +20,6 @@
     echo '<p>Welcome'. $firstname . '' .$lastname;
     echo "<p>Welcome $firstname $lastname</p>";
     ?>
+    </main>
 </body>
 </html>
