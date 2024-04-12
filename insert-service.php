@@ -14,10 +14,9 @@ if(empty($name)){
     $ok=false;
 }
 if($ok==true){
+    try {
     //Connect to db 
-    //$db=new PDO('mysql:host=127.0.0.1;dbname=comp1006','root','A+30012010sunny');
-    $db=new PDO('mysql:host=172.31.22.43;dbname=Analiya200562203','Analiya200562203','rP_ywozYAv');
-    //$db->setAttribute(PDO::ATTR_ERRMODE< PDO::ERRMODE_EXCEPTION);
+    include('shared/db.php');
     
     // set up SQL INSERT command 
     $sql="INSERT INTO services (name) VALUES (:name)";
@@ -34,6 +33,11 @@ if($ok==true){
     $db = null;
     //show msg to user 
     echo 'Show saved';
+}
+catch (Exception $err) {
+    header('location:error.php');
+    exit();
+}
     }
     ?>
     </main>

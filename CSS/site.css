@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora&family=Roboto:wght@300&family=Rubik:wght@300&display=swap');
 
 table {
     width: 65%;
@@ -325,6 +326,7 @@ select {
     font-family: 'Rubik', sans-serif;
     line-height: 1.6;
 }
+
 a:visited {
     color: cornflowerblue;
 }
@@ -332,6 +334,13 @@ a:visited {
 .actions {
     text-align: center;
 }
-#pwErr {
+
+#pwErr, .err {
     color: firebrick;
+    font-weight: bold;
+}
+
+.thumbnail {
+    /*height: 150px;*/
+    width: 90px;
 }

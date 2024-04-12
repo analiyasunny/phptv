@@ -3,6 +3,7 @@
 $showId = $_GET['showId'];
 
 if (is_numeric($showId)) {
+    try {
     // connect to db
     include('shared/db.php');
 
@@ -22,5 +23,10 @@ if (is_numeric($showId)) {
 
     // redirect back to updated shows.php (eventually)
     header('location:shows.php');
+}
+catch (Exception $err) {
+    header('location:error.php');
+    exit();
+}
 }
 ?>

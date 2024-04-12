@@ -4,27 +4,33 @@ $title='Saving a new show';
 include('shared/header.php'); 
 
 // process photo if any
-if (!empty($_FILES['photo'])) {
+if ($_FILES['photo']['size'] > 0) { 
     $photoName = $_FILES['photo']['name'];
-    echo $photoName . '<br />';
+    $finalName = session_id() . '-' . $photoName;
+    //echo $finalName . '<br />';
 
     // in php, file size is bytes (1 kb = 1024 bytes)
     $size = $_FILES['photo']['size']; 
-    echo $size . '<br />';
+   
 
     // temp location in server cache
     $tmp_name = $_FILES['photo']['tmp_name'];
-    echo $tmp_name . '<br />';
+
+    $type = mime_content_type($tmp_name);
+    //echo $type . '<br />';
+   
 
     // file type
     // $type = $_FILES['photo']['type']; // never use this - unsafe, only checks extension
-    $type = mime_content_type($tmp_name);
-    echo $type . '<br />';
-
-    // save file to img/uploads
-    move_uploaded_file($tmp_name, 'img/uploads/' . $photoName);
+    if ($type != 'image/jpeg' && $type != 'image/png') {
+        echo 'Photo must be a .jpg or .png';
+        exit();
+    }
+    else {
+        // save file to img/uploads
+        move_uploaded_file($tmp_name, 'img/uploads/' . $finalName);
+    }
 }
-/*
 //capture form inputs into vars
 $name=$_POST['name'];
 echo $name;
@@ -64,15 +70,15 @@ if(empty($service)){
 }
 
 if($ok==true){
+    try {
 //Connect to db 
-//$db=new PDO('mysql:host=127.0.0.1;dbname=comp1006','root','A+30012010sunny');
-$db=new PDO('mysql:host=172.31.22.43;dbname=Analiya200562203','Analiya200562203','rP_ywozYAv');
-//$db->setAttribute(PDO::ATTR_ERRMODE< PDO::ERRMODE_EXCEPTION);
+include('shared/db.php');
 
 //Never inject variables directly into SQL vurnal
 
 // set up SQL INSERT command 
-$sql="INSERT INTO shows (name, releaseYear, genre, service) VALUES (:name, :releaseYear, :genre, :service)";
+$sql = "INSERT INTO shows (name, releaseYear, genre, service, photo) 
+    VALUES (:name, :releaseYear, :genre, :service, :photo)";
 
 //link db connection w/SQL command we want to run
 $cmd = $db->prepare($sql);
@@ -82,6 +88,7 @@ $cmd->bindParam(':name', $name, PDO::PARAM_STR, 100);
 $cmd->bindParam(':releaseYear', $releaseYear, PDO::PARAM_INT);
 $cmd->bindParam(':genre', $genre, PDO::PARAM_STR, 20);
 $cmd->bindParam(':service', $service, PDO::PARAM_STR, 100);
+$cmd->bindParam(':photo', $finalName, PDO::PARAM_STR, 100);
 
 //execute the INSERT (Which saves to the db)
 $cmd->execute();
@@ -89,7 +96,12 @@ $cmd->execute();
 $db = null;
 //show msg to user 
 echo 'Show saved';
-}*/
+}
+catch (Exception $err) {
+    header('location:error.php');
+    exit();
+}
+}
 ?>
 </main>
 </body>

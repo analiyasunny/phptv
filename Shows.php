@@ -2,35 +2,54 @@
 $title = 'Show Library';
 include('shared/header.php');
 
-// connect
-include('shared/db.php');
+try {
+    // connect
+    include('shared/db.php');
 
-// set up query to fetch show data
-$sql = "SELECT * FROM shows";
-$cmd = $db->prepare($sql);
+    // set up query to fetch show data
+    $sql = "SELECT * FROM shows";
+    $cmd = $db->prepare($sql);
 
-// run query & store results in var called $shows
-$cmd->execute();
-$shows = $cmd->fetchAll();
+    // run query & store results in var called $shows
+    $cmd->execute();
+    $shows = $cmd->fetchAll();
+}
+catch (Exception $err) {
+    header('location:error.php');
+    exit();
+}
 
 // start the list
 echo '<h1>Show Library</h1>';
-echo '<table><thead><th>Name</th><th>Release Year</th><th>Genre</th><th>Service</th><th>Actions</th></thead>';
+echo '<table><thead><th>Name</th><th>Photo</th><th>Release Year</th><th>Genre</th><th>Service</th>';
+if (!empty($_SESSION['username'])) {
+    echo '<th>Actions</th>';
+}
+echo '</thead>';
 
 // loop through the dataresult from the query, and display each show name
 foreach ($shows as $show) {
     echo '<tr>
-    <td>' . $show['name'] . '</td>
-    <td>' . $show['releaseYear'] . '</td>
-    <td>' . $show['genre'] . '</td>
-    <td>' . $show['service'] . '</td>
-    <td class="actions">
-    <a href="edit-show.php?showId=' . $show['showId'] . '">
-                Edit
-            </a>&nbsp;
-    <a href="delete-show.php?showId=' .$show['showId'] . '" onclick="return confrimDelete();">Delete</a></td>
-    </tr>';
-     
+        <td>' . $show['name'] . '</td>
+        <td>';
+        if ($show['photo'] != null) {
+            echo '<img src="img/uploads/' . $show['photo'] . '" class="thumbnail" />';
+        }
+        echo '</td>
+        <td>' . $show['releaseYear'] . '</td>
+        <td>' . $show['genre'] . '</td>
+        <td>' . $show['service'] . '</td>';
+        if (!empty($_SESSION['username'])) {
+            echo '<td class="actions">
+                <a href="edit-show.php?showId=' . $show['showId'] . '">
+                    Edit
+                </a>&nbsp;
+                <a href="delete-show.php?showId=' .$show['showId'] . '" onclick="return confirmDelete();">
+                    Delete
+                </a>
+            </td>';
+        }
+        echo '</tr>';
 }
 
 // end list

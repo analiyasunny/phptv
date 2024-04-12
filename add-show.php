@@ -42,7 +42,7 @@ include('shared/header.php'); ?>
     </fieldset>
     <fieldset>
         <label for="name">Photo*</label>
-        <input type="file" name="Photo" >
+        <input type="file" name="photo" accept="image" >
     </fieldset>
     <button class="offset-button">Submit</button>
 </form>
